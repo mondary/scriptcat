@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ScriptCat Sync</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    .status { margin: 10px 0; padding: 10px; border-radius: 5px; }
+    .connected { background: #d4edda; color: #155724; }
+    .disconnected { background: #f8d7da; color: #721c24; }
+    button { padding: 10px 15px; margin: 5px; border: none; border-radius: 5px; cursor: pointer; }
+    .primary { background: #007bff; color: white; }
+    .primary:hover { background: #0056b3; }
+  </style>
+</head>
+<body>
+  <h2>🔗 ScriptCat Sync Bidirectionnel</h2>
+  
+  <div id="status" class="status disconnected">
+    🔌 Non connecté à VS Code
+  </div>
+  
+  <div>
+    <button id="connectBtn" class="primary">Se connecter à VS Code</button>
+    <button id="syncBtn" class="primary">Synchroniser tous les scripts</button>
+  </div>
+  
+  <div id="logs" style="margin-top: 20px; max-height: 200px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
+    <div>Logs:</div>
+  </div>
+
+  <script>
+    let status = document.getElementById('status');
+    let connectBtn = document.getElementById('connectBtn');
+    let syncBtn = document.getElementById('syncBtn');
+    let logs = document.getElementById('logs');
+    
+    let ws = null;
+    let reconnectAttempts = 0;
+    
+    function addLog(message) {
+      const logDiv = document.createElement('div');
+      logDiv.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      logs.appendChild(logDiv);
+      logs.scrollTop = logs.scrollHeight;
+    }
+    
+    function updateStatus(connected) {
+      if (connected) {
+        status.className = 'status connected';
+        status.textContent = '🔗 Connecté à VS Code';
+        connectBtn.textContent = 'Se déconnecter';
+      } else {
+        status.className = 'status disconnected';
+        status.textContent = '🔌 Non connecté à VS Code';
+        connectBtn.textContent = 'Se connecter à VS Code';
+      }
+    }
+    
+    function connect() {
+      if (ws && ws.readyState === WebSocket.OPEN) {
+        ws.close();
+        return;
+      }
+      
+      try {
+        ws = new WebSocket('ws://localhost:8643');
+        
+        ws.onopen = () => {
+          addLog('✅ Connecté à VS Code');
+          updateStatus(true);
+          reconnectAttempts = 0;
+        };
+        
+        ws.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            addLog(`📨 Reçu: ${data.type}`);
+            
+            if (data.type === 'script_list') {
+              addLog(`📦 Liste de ${data.data.length} scripts reçue`);
+            }
+          } catch (error) {
+            addLog('❌ Erreur parsing message');
+          }
+        };
+        
+        ws.onclose = () => {
+          addLog('🔌 Déconnecté de VS Code');
+          updateStatus(false);
+          scheduleReconnect();
+        };
+        
+        ws.onerror = (error) => {
+          addLog('❌ Erreur WebSocket');
+          updateStatus(false);
+        };
+        
+      } catch (error) {
+        addLog('❌ Échec connexion');
+        updateStatus(false);
+        scheduleReconnect();
+      }
+    }
+    
+    function scheduleReconnect() {
+      if (reconnectAttempts < 5) {
+        reconnectAttempts++;
+        setTimeout(() => {
+          addLog(`🔄 Tentative reconnexion (${reconnectAttempts}/5)`);
+          connect();
+        }, 2000 * reconnectAttempts);
+      }
+    }
+    
+    function syncAll() {
+      if (!ws || ws.readyState !== WebSocket.OPEN) {
+        addLog('❌ Non connecté à VS Code');
+        return;
+      }
+      
+      ws.send(JSON.stringify({
+        type: 'sync_all',
+        timestamp: Date.now()
+      }));
+      
+      addLog('🔄 Demande de synchronisation envoyée');
+    }
+    
+    connectBtn.addEventListener('click', connect);
+    syncBtn.addEventListener('click', syncAll);
+    
+    // Vérifier l'état initial
+    setTimeout(connect, 1000);
+  </script>
+</body>
+</html>

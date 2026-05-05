@@ -17,6 +17,7 @@ import type {
   SCMetadata,
   Script,
   SCRIPT_RUN_STATUS,
+  ScriptAndCode,
   ScriptDAO,
   ScriptRunResource,
   ScriptSite,
@@ -1194,6 +1195,20 @@ export class ScriptService {
     return scripts;
   }
 
+  async getAllScriptsWithCode(): Promise<ScriptAndCode[]> {
+    const scripts = await this.getAllScripts();
+    const withCode = await Promise.all(
+      scripts.map(async (script) => {
+        const code = await this.scriptCodeDAO.get(script.uuid);
+        return {
+          ...script,
+          code: code?.code || "",
+        };
+      })
+    );
+    return withCode;
+  }
+
   // 脚本排序，after为排序后的uuid列表
   async sortScript({ after }: { before: string[]; after: string[] }) {
     const daoAll = await this.scriptDAO.all();
@@ -1399,6 +1414,7 @@ export class ScriptService {
     this.listenerScriptInstall();
 
     this.group.on("getAllScripts", this.getAllScripts.bind(this));
+    this.group.on("getAllScriptsWithCode", this.getAllScriptsWithCode.bind(this));
     this.group.on("getInstallInfo", this.getInstallInfo);
     this.group.on("install", this.installScript.bind(this));
     // this.group.on("delete", this.deleteScript.bind(this));

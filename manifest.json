@@ -1,0 +1,39 @@
+{
+  "manifest_version": 3,
+  "name": "ScriptCat Sync Bidirectionnel",
+  "version": "1.0.0",
+  "description": "Extension ScriptCat avec synchronisation bidirectionnelle VS Code",
+  "permissions": [
+    "tabs",
+    "alarms",
+    "storage",
+    "cookies",
+    "offscreen",
+    "scripting",
+    "downloads",
+    "activeTab",
+    "webRequest",
+    "userScripts",
+    "contextMenus",
+    "webNavigation",
+    "notifications",
+    "clipboardWrite",
+    "unlimitedStorage",
+    "declarativeNetRequest"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "service_worker_sync.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icon.png"
+    }
+  },
+  "icons": {
+    "128": "icon.png"
+  }
+}

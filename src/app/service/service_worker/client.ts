@@ -1,4 +1,4 @@
-import type { Script, ScriptCode, ScriptRunResource, TClientPageLoadInfo } from "@App/app/repo/scripts";
+import type { Script, ScriptAndCode, ScriptCode, ScriptRunResource, TClientPageLoadInfo } from "@App/app/repo/scripts";
 import { type Resource } from "@App/app/repo/resource";
 import { type Subscribe } from "@App/app/repo/subscribe";
 import { type Permission } from "@App/app/repo/permission";
@@ -33,6 +33,10 @@ export class ScriptClient extends Client {
   // 脚本数据量大的时候，options页要读取全部的数据，可能会导致options页卡顿，直接调用serviceWorker的接口从内存中读取数据
   getAllScripts(): Promise<Script[]> {
     return this.doThrow("getAllScripts");
+  }
+
+  getAllScriptsWithCode(): Promise<ScriptAndCode[]> {
+    return this.doThrow("getAllScriptsWithCode");
   }
 
   // 获取安装信息

@@ -9,10 +9,7 @@
     "open_in_tab": true
   },
   "background": {
-    "service_worker": "src/service_worker.js",
-    "scripts": [
-      "src/service_worker.js"
-    ]
+    "service_worker": "src/service_worker.js"
   },
   "incognito": "split",
   "action": {
