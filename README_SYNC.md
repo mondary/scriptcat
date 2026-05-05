@@ -31,7 +31,7 @@ Ce fork de ScriptCat ajoute la synchronisation bidirectionnelle avec VS Code via
 cd vscode/src
 npm install
 vsce package
-code --install-extension vs-pkscriptcatws.vsix
+code --install-extension vs-pkscriptcat-snippets.vsix
 ```
 
 ## ⚙️ Configuration

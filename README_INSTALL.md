@@ -5,7 +5,7 @@
 1. **Ouvrez Chrome** et allez à `chrome://extensions/`
 2. **Activez "Mode développeur"** (en haut à droite)
 3. **Cliquez sur "Charger décompressé"**
-4. **Sélectionnez le dossier** : `/Users/clm/Documents/GitHub/PROJECTS/VS_pkscriptcatws/extensions/chrome/src/`
+4. **Sélectionnez le dossier** : `/Users/clm/Documents/GitHub/PROJECTS/VS_pkscriptcat_snippets/extensions/chrome/src/`
 
 ## Fichiers inclus
 

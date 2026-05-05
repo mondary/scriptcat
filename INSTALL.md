@@ -51,7 +51,7 @@ Dans ScriptCat :
   - Sync Delete : Activé
 
 Dans VS Code :
-- Installez l'extension `vs-pkscriptcatws`
+- Installez l'extension `vs-pkscriptcat-snippets`
 - Configurez le port : 8642
 - Activez auto-connect
 
