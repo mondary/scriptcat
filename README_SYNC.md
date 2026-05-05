@@ -44,7 +44,7 @@ code --install-extension vs-pkscriptcatws.vsix
 ### Dans VS Code
 - **Port** : 8642 (modifiable)
 - **Auto Connect** : Activé par défaut
-- **Dossier Scripts** : `/scripts/`
+- **Dossier Scripts** : `/snippets/`
 
 ## 🔄 Protocole de communication
 
